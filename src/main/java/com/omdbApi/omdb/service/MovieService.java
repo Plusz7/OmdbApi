@@ -16,7 +16,7 @@ import java.util.List;
 public class MovieService {
 
     private static final Logger LOG = LoggerFactory.getLogger(MovieService.class);
-    private HashMap<String, MovieDb> cachedMovies = new HashMap<>();
+    private final HashMap<String, MovieDb> cachedMovies = new HashMap<>();
     private final OmdbRepository omdbRepository;
     private final MovieRepository movieRepository;
 
