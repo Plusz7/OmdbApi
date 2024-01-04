@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
+import java.util.List;
 
 @Service
 public class MovieService {
@@ -25,6 +26,10 @@ public class MovieService {
     }
 
     public MovieDb getMovie(String title, String apiKey) throws OmdbMovieNotFoundException {
+
+        if(apiKey == null || apiKey.isEmpty()) {
+            throw new IllegalArgumentException("ApiKey must not be null or empty");
+        }
 
         if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("Title must not be null or empty");
@@ -49,11 +54,20 @@ public class MovieService {
         }
     }
 
-    public MovieDb saveMovie(String title, String favourite, String apiKey) {
+    public MovieDb saveMovie(String title, String favourite, String apiKey) throws OmdbMovieNotFoundException {
 
-        MovieDb movieDb = cachedMovies.get(title);
+        MovieDb movieDb = getMovie(title, apiKey);
+        if("true".equals(favourite) || "false".equals(favourite)) {
+            movieDb.setFavorite(Boolean.parseBoolean(favourite));
+        } else {
+            throw new IllegalArgumentException("Wrong favorite value.");
+        }
 
         return movieRepository.save(movieDb);
+    }
+
+    public List<MovieDb> getFavorites() {
+        return movieRepository.findByFavorite(true);
     }
 
     private boolean validateMovieDto(MovieDto movieDto) {
@@ -63,14 +77,5 @@ public class MovieService {
                 movieDto.getGenre() != null &&
                 movieDto.getDirector() != null &&
                 movieDto.getPoster() != null;
-    }
-
-    private boolean validateMovieDb(MovieDb movieDb) {
-        return movieDb != null &&
-                movieDb.getTitle() != null &&
-                movieDb.getDescription() != null &&
-                movieDb.getGenre() != null &&
-                movieDb.getDirector() != null &&
-                movieDb.getPoster() != null;
     }
 }
