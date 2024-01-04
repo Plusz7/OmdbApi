@@ -65,7 +65,7 @@ public class MovieDb {
         this.favorite = favorite;
     }
 
-    public boolean isFavorite() {
+    public boolean isFavourite() {
         return favorite;
     }
 }

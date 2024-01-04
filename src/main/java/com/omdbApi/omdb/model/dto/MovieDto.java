@@ -21,6 +21,14 @@ public class MovieDto {
     public MovieDto() {
     }
 
+    public MovieDto(String title, String description, String genre, String director, String poster) {
+        this.title = title;
+        this.description = description;
+        this.genre = genre;
+        this.director = director;
+        this.poster = poster;
+    }
+
     // Getters and setters
     public String getTitle() {
         return title;
