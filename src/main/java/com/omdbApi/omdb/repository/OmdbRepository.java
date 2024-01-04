@@ -17,6 +17,7 @@ public class OmdbRepository {
     }
 
     public MovieDto getMovieDto(String title, String apiKey) {
+        LOG.info("Fetching movie information from Omdb database.");
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder
                         .queryParam("apikey", apiKey)
