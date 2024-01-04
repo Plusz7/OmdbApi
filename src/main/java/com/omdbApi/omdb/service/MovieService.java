@@ -47,7 +47,7 @@ public class MovieService {
 
         if(validateMovieDto(movieDto)) {
             MovieDb movieDb = movieDto.toMovieDb();
-            cachedMovies.put(movieDto.getTitle(), movieDto.toMovieDb());
+            cachedMovies.put(movieDb.getTitle(), movieDb);
             return movieDb;
         } else {
             throw new OmdbMovieNotFoundException("Movie not found. Title: " + title);
