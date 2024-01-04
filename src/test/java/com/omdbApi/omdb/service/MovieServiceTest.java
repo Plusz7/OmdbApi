@@ -36,6 +36,8 @@ public class MovieServiceTest {
     private OmdbRepository omdbRepository;
     private MovieService movieService;
 
+    private static final String TITLE = "title";
+    private static final String API_KEY = "apikey";
     @BeforeEach
     public void setup() {
         movieService = new MovieService(omdbRepository, movieRepository);
@@ -46,9 +48,9 @@ public class MovieServiceTest {
 
         MovieDto movieDto = TestObjects.movieDto;
 
-        when(omdbRepository.getMovieDto(movieDto.getTitle(), "apikey")).thenReturn(movieDto);
+        when(omdbRepository.getMovieDto(movieDto.getTitle(), API_KEY)).thenReturn(movieDto);
 
-        MovieDb movie = movieService.getMovie(movieDto.getTitle(), "apikey");
+        MovieDb movie = movieService.getMovie(movieDto.getTitle(), API_KEY);
 
         assertNotNull(movie);
         verify(omdbRepository, times(1)).getMovieDto(any(), any());
@@ -58,13 +60,13 @@ public class MovieServiceTest {
     public void failFindMovie() {
         MovieDto movieDto = TestObjects.movieDto;
 
-        when(omdbRepository.getMovieDto(movieDto.getTitle(), "apikey")).thenReturn(null);
+        when(omdbRepository.getMovieDto(movieDto.getTitle(), API_KEY)).thenReturn(null);
 
         assertThrows(OmdbMovieNotFoundException.class, () -> {
-            movieService.getMovie(movieDto.getTitle(), "apikey");
+            movieService.getMovie(movieDto.getTitle(), API_KEY);
         });
 
-        verify(omdbRepository, times(1)).getMovieDto(movieDto.getTitle(), "apikey");
+        verify(omdbRepository, times(1)).getMovieDto(movieDto.getTitle(), API_KEY);
     }
 
     @Test
@@ -72,21 +74,21 @@ public class MovieServiceTest {
         String title = "";
 
         assertThrows(IllegalArgumentException.class, () -> {
-            movieService.getMovie(title, "apikey");
+            movieService.getMovie(title, API_KEY);
         });
     }
 
     @Test
     public void nullTitleFindMovie() {
          assertThrows(IllegalArgumentException.class, () -> {
-            movieService.getMovie(null, "apikey");
+            movieService.getMovie(null, API_KEY);
         });
     }
 
     @Test
     public void whenMovieFetchedFirstTime_thenItShouldBeCached() throws OmdbMovieNotFoundException {
-        String title = "title";
-        String apiKey = "apikey";
+        String title = TITLE;
+        String apiKey = API_KEY;
         MovieDto movieDto = TestObjects.movieDto;
 
         when(omdbRepository.getMovieDto(title, apiKey)).thenReturn(movieDto);
@@ -100,8 +102,8 @@ public class MovieServiceTest {
 
     @Test
     public void whenMovieFetchedSecondTime_thenItShouldBeRetrievedFromCache() throws OmdbMovieNotFoundException {
-        String title = "title";
-        String apiKey = "apikey";
+        String title = TITLE;
+        String apiKey = API_KEY;
         MovieDto movieDto = TestObjects.movieDto;
 
         when(omdbRepository.getMovieDto(title, apiKey)).thenReturn(movieDto);
@@ -114,7 +116,7 @@ public class MovieServiceTest {
 
     @Test
     public void whenCacheLimitReached_thenCacheShouldBeCleared() throws OmdbMovieNotFoundException {
-        String apiKey = "apikey";
+        String apiKey = API_KEY;
         for (int i = 1; i <= 6; i++) {
             String title = "Movie " + i;
             MovieDto movieDto = TestObjects.movieDto;// Setup a valid movie DTO
@@ -133,8 +135,8 @@ public class MovieServiceTest {
 
     @Test
     public void whenValidTitleAndFavorite_thenMovieShouldBeSaved() throws OmdbMovieNotFoundException {
-        String title = "title";
-        String apiKey = "apikey";
+        String title = TITLE;
+        String apiKey = API_KEY;
         String favourite = "true";
         MovieDto movieDto = TestObjects.movieDto;
         MovieDb movieDb = movieDto.toMovieDb();
@@ -151,8 +153,8 @@ public class MovieServiceTest {
 
     @Test
     public void whenInvalidFavorite_thenThrowIllegalArgumentException() {
-        String title = "title";
-        String apiKey = "apikey";
+        String title = TITLE;
+        String apiKey = API_KEY;
         String favourite = "invalid";
 
         when(omdbRepository.getMovieDto(title, apiKey)).thenReturn(TestObjects.movieDto);
