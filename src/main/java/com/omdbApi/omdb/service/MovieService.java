@@ -46,10 +46,12 @@ public class MovieService {
         MovieDto movieDto = omdbRepository.getMovieDto(title, apiKey);
 
         if(validateMovieDto(movieDto)) {
+            LOG.info("MovieDto " + movieDto.getTitle() + " is valid.");
             MovieDb movieDb = movieDto.toMovieDb();
             cachedMovies.put(movieDb.getTitle(), movieDb);
             return movieDb;
         } else {
+            LOG.error("Movie not found. Title: " + title);
             throw new OmdbMovieNotFoundException("Movie not found. Title: " + title);
         }
     }
