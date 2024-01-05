@@ -33,10 +33,6 @@ public class OmdbApiIntegrationTest {
     private MockWebServer mockWebServer;
 
     @Autowired
-    @Qualifier("testing")
-    private WebClient webClient;
-
-    @Autowired
     private MockMvc mockMvc;
 
     @Autowired
