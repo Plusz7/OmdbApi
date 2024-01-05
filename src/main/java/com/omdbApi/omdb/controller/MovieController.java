@@ -35,9 +35,9 @@ public class MovieController {
     public ResponseEntity<MovieDb> saveMovie(
             @RequestParam String title,
             @RequestParam String apiKey,
-            @RequestParam String favorite
+            @RequestParam String favourite
     ) throws OmdbMovieNotFoundException {
-        MovieDb movie = service.saveMovie(title, favorite, apiKey);
+        MovieDb movie = service.saveMovie(title, favourite, apiKey);
         return ResponseEntity.ok().body(movie);
     }
 
