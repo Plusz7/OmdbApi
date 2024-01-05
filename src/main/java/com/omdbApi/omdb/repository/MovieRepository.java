@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface MovieRepository extends JpaRepository<MovieDb, Long> {
+    MovieDb findByTitle(String title);
     List<MovieDb> findByFavorite(boolean favorites);
 }

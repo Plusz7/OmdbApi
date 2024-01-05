@@ -1,6 +1,8 @@
 package com.omdbApi.omdb.config;
 
+import com.omdbApi.omdb.repository.OmdbRepository;
 import okhttp3.mockwebserver.MockWebServer;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
@@ -24,5 +26,11 @@ public class TestConfig {
         return WebClient.builder()
                 .baseUrl(mockWebServer.url("/").toString())
                 .build();
+    }
+
+    @Bean
+    @Profile("test")
+    public OmdbRepository omdbRepository(@Qualifier("testing") WebClient webClient) {
+        return new OmdbRepository(webClient);
     }
 }
