@@ -1,5 +1,6 @@
 package com.omdbApi.omdb.service;
 
+import com.omdbApi.omdb.exception.MovieRequestArgumentException;
 import com.omdbApi.omdb.exception.OmdbMovieNotFoundException;
 import com.omdbApi.omdb.model.MovieDb;
 import com.omdbApi.omdb.model.dto.MovieDto;
@@ -25,14 +26,14 @@ public class MovieService {
         this.movieRepository = movieRepository;
     }
 
-    public MovieDb getMovie(String title, String apiKey) throws OmdbMovieNotFoundException {
+    public MovieDb getMovie(String title, String apiKey) throws OmdbMovieNotFoundException, MovieRequestArgumentException {
 
         if(apiKey == null || apiKey.isEmpty()) {
-            throw new IllegalArgumentException("ApiKey must not be null or empty");
+            throw new MovieRequestArgumentException("ApiKey must not be null or empty");
         }
 
         if (title == null || title.trim().isEmpty()) {
-            throw new IllegalArgumentException("Title must not be null or empty");
+            throw new MovieRequestArgumentException("Title must not be null or empty");
         }
 
         if(cachedMovies.containsKey(title)) {
@@ -56,13 +57,13 @@ public class MovieService {
         }
     }
 
-    public MovieDb saveMovie(String title, String favourite, String apiKey) throws OmdbMovieNotFoundException {
+    public MovieDb saveMovie(String title, String favourite, String apiKey) throws OmdbMovieNotFoundException, MovieRequestArgumentException {
 
         MovieDb movieDb = getMovie(title, apiKey);
         if("true".equals(favourite) || "false".equals(favourite)) {
             movieDb.setFavorite(Boolean.parseBoolean(favourite));
         } else {
-            throw new IllegalArgumentException("Wrong favorite value.");
+            throw new MovieRequestArgumentException("Wrong favorite value.");
         }
 
         return movieRepository.save(movieDb);
