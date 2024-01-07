@@ -1,5 +1,6 @@
 package com.omdbApi.omdb.controller;
 
+import com.omdbApi.omdb.exception.MovieRequestArgumentException;
 import com.omdbApi.omdb.exception.OmdbMovieNotFoundException;
 import com.omdbApi.omdb.model.MovieDb;
 import com.omdbApi.omdb.service.MovieService;
@@ -26,7 +27,7 @@ public class MovieController {
     public ResponseEntity<MovieDb> getMovie(
             @RequestParam String title,
             @RequestParam String apiKey
-    ) throws OmdbMovieNotFoundException {
+    ) throws OmdbMovieNotFoundException, MovieRequestArgumentException {
         MovieDb movie = service.getMovie(title, apiKey);
         return ResponseEntity.ok().body(movie);
     }
@@ -36,7 +37,7 @@ public class MovieController {
             @RequestParam String title,
             @RequestParam String apiKey,
             @RequestParam String favourite
-    ) throws OmdbMovieNotFoundException {
+    ) throws OmdbMovieNotFoundException, MovieRequestArgumentException {
         MovieDb movie = service.saveMovie(title, favourite, apiKey);
         return ResponseEntity.ok().body(movie);
     }

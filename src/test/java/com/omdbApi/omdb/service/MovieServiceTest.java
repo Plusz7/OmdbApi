@@ -1,5 +1,6 @@
 package com.omdbApi.omdb.service;
 
+import com.omdbApi.omdb.exception.MovieRequestArgumentException;
 import com.omdbApi.omdb.exception.OmdbMovieNotFoundException;
 import com.omdbApi.omdb.model.MovieDb;
 import com.omdbApi.omdb.model.dto.MovieDto;
@@ -44,7 +45,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void successfullyFindMovie() throws OmdbMovieNotFoundException {
+    public void successfullyFindMovie() throws OmdbMovieNotFoundException, MovieRequestArgumentException {
 
         MovieDto movieDto = TestObjects.movieDto;
 
@@ -73,20 +74,20 @@ public class MovieServiceTest {
     public void emptyTitleFindMovie() {
         String title = "";
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(MovieRequestArgumentException.class, () -> {
             movieService.getMovie(title, API_KEY);
         });
     }
 
     @Test
     public void nullTitleFindMovie() {
-         assertThrows(IllegalArgumentException.class, () -> {
+         assertThrows(MovieRequestArgumentException.class, () -> {
             movieService.getMovie(null, API_KEY);
         });
     }
 
     @Test
-    public void whenMovieFetchedFirstTime_thenItShouldBeCached() throws OmdbMovieNotFoundException {
+    public void whenMovieFetchedFirstTime_thenItShouldBeCached() throws OmdbMovieNotFoundException, MovieRequestArgumentException {
         String title = TITLE;
         String apiKey = API_KEY;
         MovieDto movieDto = TestObjects.movieDto;
@@ -101,7 +102,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void whenMovieFetchedSecondTime_thenItShouldBeRetrievedFromCache() throws OmdbMovieNotFoundException {
+    public void whenMovieFetchedSecondTime_thenItShouldBeRetrievedFromCache() throws OmdbMovieNotFoundException, MovieRequestArgumentException {
         String title = TITLE;
         String apiKey = API_KEY;
         MovieDto movieDto = TestObjects.movieDto;
@@ -115,7 +116,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void whenCacheLimitReached_thenCacheShouldBeCleared() throws OmdbMovieNotFoundException {
+    public void whenCacheLimitReached_thenCacheShouldBeCleared() throws OmdbMovieNotFoundException, MovieRequestArgumentException {
         String apiKey = API_KEY;
         for (int i = 1; i <= 6; i++) {
             String title = "Movie " + i;
@@ -134,7 +135,7 @@ public class MovieServiceTest {
     }
 
     @Test
-    public void whenValidTitleAndFavorite_thenMovieShouldBeSaved() throws OmdbMovieNotFoundException {
+    public void whenValidTitleAndFavorite_thenMovieShouldBeSaved() throws OmdbMovieNotFoundException, MovieRequestArgumentException {
         String title = TITLE;
         String apiKey = API_KEY;
         String favourite = "true";
@@ -159,7 +160,7 @@ public class MovieServiceTest {
 
         when(omdbRepository.getMovieDto(title, apiKey)).thenReturn(TestObjects.movieDto);
 
-        assertThrows(IllegalArgumentException.class, () -> {
+        assertThrows(MovieRequestArgumentException.class, () -> {
             movieService.saveMovie(title, favourite, apiKey);
         });
     }
